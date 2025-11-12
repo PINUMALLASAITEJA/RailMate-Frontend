@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { registerUser } from "../api/railmateAPI"; // ✅ Import the centralized function
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -24,23 +25,27 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://127.0.0.1:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      // FIX: Use the centralized API function which uses VITE_API_URL
+      const data = await registerUser(formData);
 
-      const data = await res.json();
+      // const res = await fetch("http://127.0.0.1:5000/auth/register", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(formData),
+      // });
+      // const data = await res.json(); // Data already parsed in registerUser
 
-      if (res.ok) {
+      if (data.success) {
         // ✅ Save username for session and success message
         sessionStorage.setItem("username", formData.username);
         setMessage("✅ Registered successfully! You can now log in.");
       } else {
+        // This case is typically handled by the throw in registerUser, 
+        // but kept for robustness.
         setMessage("❌ " + (data.error || "Registration failed."));
       }
-    } catch {
-      setMessage("⚠️ Registration failed. Try again later.");
+    } catch (error) { // Catch the error thrown by registerUser
+      setMessage("⚠️ Registration failed: " + error.message);
     }
   };
 

@@ -1,7 +1,7 @@
 
 
 // src/api/railmateAPI.js
-const API_URL = "https://rail-mate-frontend.vercel.app"; // ❌ PROBLEM: This is your frontend URL!
+const API_URL = "https://rail-mate-smoky.vercel.app/"
 
 // 🚆 Fetch trains
 export const getTrains = async () => {

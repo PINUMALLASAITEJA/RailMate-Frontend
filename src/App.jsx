@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -10,19 +10,23 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import "./styles/Global.css";
 
+// List of routes that DO NOT require authentication
+const PUBLIC_ROUTES = ["/login", "/register", "/"];
+
 // ✅ Wrapper for handling redirect logic on page load
 const ProtectedApp = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Hook to get the current URL path
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
+    const token = sessionStorage.getItem("token"); // Changed to sessionStorage for consistency
+    const isPublicRoute = PUBLIC_ROUTES.includes(location.pathname);
 
-    // If no user -> go to login
-    if (!token || !username) {
+    // If no user token is found AND the user is NOT on a public page, redirect to login.
+    if (!token && !isPublicRoute) {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -35,6 +39,8 @@ const ProtectedApp = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          {/* Add a catch-all route for missing pages if needed */}
+          {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </main>
       <Footer />

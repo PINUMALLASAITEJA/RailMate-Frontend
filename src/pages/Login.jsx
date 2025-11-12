@@ -8,11 +8,11 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // ✅ Redirect if already logged in
+  // ✅ Redirect if already logged in (using sessionStorage)
   useEffect(() => {
+    // FIX: Using sessionStorage for consistency across the app.
     const token = sessionStorage.getItem("token");
-    const isOnRegister = window.location.pathname === "/register";
-    if (token && !isOnRegister) navigate("/");
+    if (token) navigate("/"); // If token exists, go home.
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -25,7 +25,7 @@ const Login = () => {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // ✅ Store actual username from backend (not from email)
+        // ✅ Store tokens in sessionStorage
         sessionStorage.setItem("token", data.token);
         sessionStorage.setItem("username", data.username || formData.email.split("@")[0]);
 

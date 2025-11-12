@@ -1,6 +1,6 @@
 // src/api/railmateAPI.js
 
-const API_URL = "https://rail-mate-9w4bhq7o2-pinumalla-sai-tejas-projects.vercel.app";
+const API_URL = "https://rail-mate-frontend.vercel.app";
 
 // 🚆 Fetch trains
 export const getTrains = async () => {
